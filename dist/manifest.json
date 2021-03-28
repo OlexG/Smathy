@@ -1,0 +1,25 @@
+{
+	"name": "Smathy",
+	"version": "1.0",
+	"description": "Solves and replaces in-text mathematical expressions with key command",
+	"permissions": ["tabs", "storage", "activeTab", "<all_urls>"],
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	"icons": { 
+		"16": "S.png",
+		"48": "S.png",
+		"128": "S.png" 
+	},
+	"browser_action": {
+		"default_popup": "UI/popup.html"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["main.js"]
+		}
+	],
+	"manifest_version": 2
+}
