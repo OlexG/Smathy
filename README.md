@@ -1,5 +1,6 @@
 # Smathy
 Google extension which solves and replaces in-text mathematical expressions in Google docs with a key command
+![Alt Text](https://media2.giphy.com/media/e0VRSOtn884pH6GAtf/giphy.gif?cid=790b7611f217cd28b0fbc36b3edff03b0f515d8e7d8b4d8a&rid=giphy.gif&ct=g)
 # Instructions to run the extension
 Go to chrome://extensions/ and click "Load unpacked". Upload the dist folder. 
 ## Note
