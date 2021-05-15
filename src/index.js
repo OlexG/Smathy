@@ -9,22 +9,20 @@ import $ from 'jquery';
 let buffer = [];
 let combination = ['CONTROL', 'SHIFT', 'Q'];
 
-chrome.storage.local.get(['combination'], (result) => {
+chrome.storage.local.get(['combination'], function (result) {
 	if (!result.combination) {
 		chrome.storage.local.set({ combination });
 	} else {
-		combination = [...result.combination];
+		combination = [...(result.combination)];
 	}
 });
 
 // recieve requests from the extension UI
 chrome.runtime.onMessage.addListener(
-	function (request) {
+	async function (request) {
 		if (request.keyString && request.index) {
-			console.log(request.keyString);
 			combination[request.index] = request.keyString.toUpperCase();
 			chrome.storage.local.set({ combination });
-			console.log(combination);
 		} else {
 			combination = [...request];
 		}

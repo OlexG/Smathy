@@ -5,14 +5,17 @@ document.getElementById('1').addEventListener('click', handleClick);
 document.getElementById('2').addEventListener('click', handleClick);
 document.getElementById('3').addEventListener('click', handleClick);
 
-chrome.storage.local.get(['combination'], (result) => {
-	result.combination.forEach((val, idx) => {
-		const newString = proccessString(val);
-		document.getElementById(idx + 1).innerHTML = newString;
-	});
-	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, [reverseString(document.getElementById('1')), reverseString(document.getElementById('2')), reverseString(document.getElementById('3'))]);
-	});
+chrome.storage.local.get(['combination'], function (result) {
+	if (result.combination) {
+		console.log(result.combination);
+		result.combination.forEach((val, idx) => {
+			const newString = proccessString(val);
+			document.getElementById(idx + 1).innerHTML = newString;
+		});
+		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, [reverseString(document.getElementById('1').innerHTML), reverseString(document.getElementById('2').innerHTML), reverseString(document.getElementById('3').innerHTML)]);
+		});
+	}
 });
 
 function proccessString (str) {
