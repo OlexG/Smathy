@@ -13,7 +13,7 @@ chrome.storage.local.get(['combination'], (result) => {
 	if (!result.combination) {
 		chrome.storage.local.set({ combination });
 	} else {
-		chrome.storage.local.set({ combination });
+		combination = [...result.combination];
 	}
 });
 
