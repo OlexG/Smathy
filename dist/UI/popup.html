@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/styles.css">
 	</head>
-	<body>
-		<p>This is a test</p>
+	<body style="width:300px;">
+		<div class = "header card">
+			<h1 class="text">Smathy</h1>
+		</div>
+		<h4 class="text p-3">Change your keybind</h4>
+		<p class="text p-3">Don't set it to any existing key binds on chrome<p>
+		<div class = "d-flex flex-row p-3 justify-content-around">
+			<div class = "card characterPicker" id = "1">CRTL</div>
+			<div class = "card characterPicker" id = "2">SHIFT</div>
+			<div class = "card characterPicker" id = "3">Q</div>
+		</div>
 		<script src="popup.js"></script>
 	</body>
 </html>

@@ -1,0 +1,33 @@
+.text {
+	text-align: center;
+}
+
+.characterPicker{
+	width: 3rem;
+	height: 3rem;
+	display: grid;
+	place-items: center;
+	border: 1px solid grey;
+}
+
+.card {
+	border-radius: 0px;
+	background-color: #f2f2f2;
+	cursor: default;
+	transition: 0.3s;
+}
+
+.card:hover{
+	background-color: white;
+}
+
+.header{
+	background-color: #f2f2f2;
+}
+
+.notransition {
+	-webkit-transition: none !important;
+	-moz-transition: none !important;
+	-o-transition: none !important;
+	transition: none !important;
+}

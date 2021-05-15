@@ -1,57 +1,72 @@
-import {getSelection, pressOn, typeText} from 'google-docs-utils';
+/* eslint-disable no-undef */
+import googleDocument from './googleDocsUtils.js';
+import { typeText } from 'google-docs-utils';
 import mathString from 'math-string';
-import $ from "jquery";
+import $ from 'jquery';
 
 // Array which tracks the sequence, wipes if the keystrokes aren't part of the "command" key strokes
 
 let buffer = [];
-let combination = [17, 16, 81];
+let combination = ['CONTROL', 'SHIFT', 'Q'];
 
+chrome.storage.local.get(['combination'], (result) => {
+	if (!result.combination) {
+		chrome.storage.local.set({ combination });
+	} else {
+		chrome.storage.local.set({ combination });
+	}
+});
 
-function getFullSelection(arr){
-	const selected = arr.filter(line => 
-		(line != null && 'selectedText' in line)
-	).map(line =>
-		line.selectedText	
-	).join();
-	return selected;
+// recieve requests from the extension UI
+chrome.runtime.onMessage.addListener(
+	function (request) {
+		if (request.keyString && request.index) {
+			console.log(request.keyString);
+			combination[request.index] = request.keyString.toUpperCase();
+			chrome.storage.local.set({ combination });
+			console.log(combination);
+		} else {
+			combination = [...request];
+		}
+		return true;
+	}
+);
+
+function processSelection (selection) {
+	const stripped = selection.replace(/\s+/g, '').normalize('NFKD').replace(/⁄/g, '/');
+	return stripped;
 }
-function arrayEquals(a, b) {
+
+function arrayEquals (a, b) {
 	return Array.isArray(a) &&
 	Array.isArray(b) &&
 	a.length === b.length &&
 	a.every((val, index) => val === b[index]);
 }
 
-
 // hook key presses into google docs - https://stackoverflow.com/questions/40435556/chrome-extension-detecting-keypresses-in-google-docs
-var editingIFrame = $('iframe.docs-texteventtarget-iframe')[0];
+const editingIFrame = $('iframe.docs-texteventtarget-iframe')[0];
 if (editingIFrame) {
-	editingIFrame.contentDocument.addEventListener("keydown", hook, false);
+	editingIFrame.contentDocument.addEventListener('keydown', hook, false);
 }
-function hook(e){
-	var keyCode = e.keyCode;
-	//17, 16, 81 -> cntrl shift q
-	buffer.push(keyCode);
-	console.log(buffer);
-	if (!combination.includes(keyCode)){
-		buffer = [];
-	}
-	if (arrayEquals(buffer, combination)){
+function hook (e) {
+	const keyString = e.key.toUpperCase();
+	buffer.push(keyString);
+	if (arrayEquals(buffer, combination)) {
 		// do math here
 		try {
-			console.log(getFullSelection(getSelection()));
-			let result = mathString(getFullSelection(getSelection()));
-			console.log(result);
-			typeText(result.toString());
-		}
-		catch(e){
+			const selection = processSelection(googleDocument.getGoogleDocument().selectedText).replace(/\s+/g, '');
+			const result = mathString(selection);
+			if (result !== selection) {
+				typeText(result.toString());
+			}
+		} catch (e) {
 			console.log(e);
 		}
 		buffer = [];
 	}
-	//if we are currently recording more keypressed then needed we just clear our buffer
-	if (buffer.length > combination.length){
-		buffer = [];
+	// if we are currently recording more keypressed then needed we just clear our buffer
+	if (buffer.length > combination.length || buffer[buffer.length - 1] != combination[buffer.length - 1]) {
+		buffer = [keyString];
 	}
 }
